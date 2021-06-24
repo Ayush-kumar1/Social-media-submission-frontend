@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap');
+.nav {
+    width: 100%;
+    cursor: pointer;
+    position: fixed;
+    /* display: flex;
+    justify-content: center; */
+    text-align: end;
+    /* background-color: #39445a; */
+    height: 5rem;
+    /* background: var(--navbar); */
+    font-size: 2vw;
+    padding-bottom: 15px;
+    /* color: white; */
+    z-index: 99;
+    /* font-family: 'Montserrat', sans-serif; */
+    box-shadow: 0px 1px 5px black;
+}
+
+.Header_content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.brand-logo {
+    font-family: 'Grand Hotel', cursive;
+    font-weight: 200;
+}
+
+.Header-links a {
+    color: black;
+    text-decoration: none;
+}

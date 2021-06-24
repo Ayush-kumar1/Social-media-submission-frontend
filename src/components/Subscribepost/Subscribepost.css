@@ -1,0 +1,29 @@
+.media-card {
+    display: flex;
+    flex-direction: column;
+    width: 501px;
+    height: fit-content;
+    border: 1px solid black;
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+}
+
+img {
+    width: 500px;
+    height: 400px;
+}
+
+.body {
+    padding-top: 8rem;
+    padding-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.media_content {
+    margin-right: auto;
+    margin-left: auto;
+}
