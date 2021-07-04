@@ -4,15 +4,16 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import { IconButton, Input } from "@material-ui/core";
-import { useMedia } from "../../MediaContext";
+
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Link } from "react-router-dom";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 function Home() {
-  const { state } = useMedia();
   const [data, setData] = useState([]);
+  const [user, setUser] = useState();
 
   useEffect(() => {
-    fetch("http://localhost:5000/allpost", {
+    fetch("https://chit-chat-12.herokuapp.com/allpost", {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -27,7 +28,7 @@ function Home() {
   }, []);
 
   const postLikes = (id) => {
-    fetch("http://localhost:5000/like", {
+    fetch("https://chit-chat-12.herokuapp.com/like", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +56,7 @@ function Home() {
   };
 
   const postUnlikes = (id) => {
-    fetch("http://localhost:5000/unlike", {
+    fetch("https://chit-chat-12.herokuapp.com/unlike", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -67,8 +68,6 @@ function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
-        // console.log(result)
-
         const newData = data.map((item) => {
           if (item._id === result._id) {
             return result;
@@ -83,7 +82,7 @@ function Home() {
   };
 
   const postComment = (text, id) => {
-    fetch("http://localhost:5000/comment", {
+    fetch("https://chit-chat-12.herokuapp.com/comment", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -96,8 +95,6 @@ function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-
         const newData = data.map((item) => {
           if (item._id === result._id) {
             return result;
@@ -112,19 +109,17 @@ function Home() {
   };
 
   const deletePost = (postId) => {
-    fetch(`http://localhost:5000/delete/${postId}`, {
+    fetch(`https://chit-chat-12.herokuapp.com/delete/${postId}`, {
       method: "delete",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("jwt")
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-
         const newData = data.filter((elem) => {
-          return elem._id !== result._id;
+          return elem._id !== result.result._id;
         });
 
         setData(newData);
@@ -133,8 +128,16 @@ function Home() {
   };
 
   // console.log(data)
+
+  const temp = JSON.parse(localStorage.getItem("user"));
+
   return (
     <div className="body">
+      <Link to="/createpost">
+        <h2 className="create-post">
+          <AddCircleIcon fontSize="large" />{" "}
+        </h2>
+      </Link>
       <div className="media_content">
         {/* Card */}
 
@@ -165,9 +168,14 @@ function Home() {
                       </Link>{" "}
                     </h5>
                     <IconButton>
-                    <DeleteIcon onClick={()=>deletePost(elem._id)}  />
+                      <DeleteIcon
+                        style={{
+                          dispaly:
+                            temp._id !== elem.postedBy._id ? "none" : "block",
+                        }}
+                        onClick={() => deletePost(elem._id)}
+                      />
                     </IconButton>
-
                   </div>
                   <img src={elem.photo} alt="" />
                   <h3 style={{ paddingLeft: "0.5rem" }}>{elem.title}</h3>
@@ -207,7 +215,7 @@ function Home() {
                     onSubmit={(e) => {
                       e.preventDefault();
                       postComment(e.target[0].value, elem._id);
-                      e.target[0].value=""
+                      e.target[0].value = "";
                     }}
                   >
                     <Input

@@ -23,6 +23,13 @@ img {
     gap: 3rem;
 }
 
+.create-post {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    color: black;
+}
+
 .media_content {
     margin-right: auto;
     margin-left: auto;

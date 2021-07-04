@@ -1,18 +1,25 @@
 import React,{useState,useEffect} from 'react';
 import "./Profile.css";
-import {useMedia} from "../../MediaContext";
+
 import { Input } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import {UpdatepicAction} from "../../action/userAction";
 
 function Profile() {
 
 const[pics,setPics]=useState([]);
-const{state,dispatch}=useMedia();
+
 const [image,setImage]=useState("");
 const [url,setUrl]=useState("");
+const dispatch = useDispatch();
+
+const User=useSelector((state)=>state.User)
+const {state}=User;
+
 
     useEffect(()=>{
 
-        fetch("http://localhost:5000/mypost",{
+        fetch("https://chit-chat-12.herokuapp.com/mypost",{
             headers:{
                 "Content-Type": "application/json",
                 "Authorization": "Bearer "+ localStorage.getItem("jwt")
@@ -20,7 +27,7 @@ const [url,setUrl]=useState("");
         })
         .then(res=> res.json())
         .then(data=>{
-            // console.log(data.mypost)
+            
             setPics(data.mypost)
 
         })
@@ -46,7 +53,7 @@ const [url,setUrl]=useState("");
           console.log(data)
          
           
-          fetch("http://localhost:5000/updatepic", {
+          fetch("https://chit-chat-12.herokuapp.com/updatepic", {
              method:"put",
              headers:{
                  "Content-Type":"application/json",
@@ -60,7 +67,8 @@ const [url,setUrl]=useState("");
           .then(result=>{
               console.log(result)
               localStorage.setItem("user",JSON.stringify({...state,pic:result.pic}))
-              dispatch({type:"UPDATEPIC",payload:result.pic})
+
+                 dispatch(UpdatepicAction(result.pic))
           })
           .catch(err=>console.log(err))
     
@@ -77,7 +85,7 @@ const [url,setUrl]=useState("");
         
        }
 
-       console.log(state);
+       
 
     return (
         <div style={{paddingTop:"7rem"}}>

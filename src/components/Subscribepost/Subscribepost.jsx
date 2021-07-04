@@ -12,7 +12,7 @@ function Subscribepost() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/getsubpost", {
+    fetch("https://chit-chat-12.herokuapp.com/getsubpost", {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -27,7 +27,7 @@ function Subscribepost() {
   }, []);
 
   const postLikes = (id) => {
-    fetch("http://localhost:5000/like", {
+    fetch("https://chit-chat-12.herokuapp.com/like", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function Subscribepost() {
   };
 
   const postUnlikes = (id) => {
-    fetch("http://localhost:5000/unlike", {
+    fetch("https://chit-chat-12.herokuapp.com/unlike", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +67,7 @@ function Subscribepost() {
     })
       .then((res) => res.json())
       .then((result) => {
-        // console.log(result)
+        
 
         const newData = data.map((item) => {
           if (item._id === result._id) {
@@ -83,7 +83,7 @@ function Subscribepost() {
   };
 
   const postComment = (text, id) => {
-    fetch("http://localhost:5000/comment", {
+    fetch("https://chit-chat-12.herokuapp.com/comment", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +112,7 @@ function Subscribepost() {
   };
 
   const deletePost = (postId) => {
-    fetch(`http://localhost:5000/delete/${postId}`, {
+    fetch(`https://chit-chat-12.herokuapp.com/delete/${postId}`, {
       method: "delete",
       headers: {
         "Content-Type": "application/json",
@@ -132,7 +132,7 @@ function Subscribepost() {
       .catch((err) => console.log(err));
   };
 
-  // console.log(data)
+  
   return (
     <div className="body">
       <div className="media_content">

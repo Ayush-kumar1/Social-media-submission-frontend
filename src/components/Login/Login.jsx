@@ -4,14 +4,16 @@ import { Input } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { Link, useNavigate } from "react-router-dom";
 import M from "materialize-css";
-import {useMedia} from "../../MediaContext"
+import { useMedia } from "../../MediaContext";
+import { UserAction } from "../../action/userAction";
+import { useDispatch, useSelector } from "react-redux";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const{state,dispatch}=useMedia()
 
   let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const postData = () => {
     if (
@@ -21,7 +23,7 @@ function Login() {
     ) {
       return M.toast({ html: "Invalid email" });
     } else {
-      fetch("http://localhost:5000/signin", {
+      fetch("https://chit-chat-12.herokuapp.com/signin", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -33,15 +35,16 @@ function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          if (data.message!=="Login succesful") {
+          if (data.message !== "Login succesful") {
             M.toast({ html: data.message, classes: "#c62828 red darken-3" });
           } else {
-            localStorage.setItem("jwt",data.token);
-            localStorage.setItem("user",JSON.stringify(data.user))
-            dispatch({type:"USER", payload:data.user})
+            localStorage.setItem("jwt", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            dispatch(UserAction(data.user));
+
             M.toast({ html: "Login sucessful" });
-            navigate("/");
+            navigate("/home");
           }
         })
         .catch((err) => {
@@ -54,7 +57,7 @@ function Login() {
     <div style={{ paddingTop: "9rem" }}>
       <div className="media_card">
         <h1 className="brand-logo" style={{ margin: "0 auto" }}>
-        Chit-Chat
+          Chit-Chat
         </h1>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
