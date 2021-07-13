@@ -1,7 +1,7 @@
-.media_card {
+.media_card_login {
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: 30rem;
     height: 310px;
     padding: 5px;
     margin: 5px auto;
@@ -15,4 +15,11 @@
 
 .signup-redirect {
     margin: 0px auto;
+}
+
+@media only screen and (max-width: 600px) {
+    /*Big smartphones [426px -> 600px]*/
+    .media_card_login {
+        width: 20rem;
+    }
 }

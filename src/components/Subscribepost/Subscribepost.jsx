@@ -4,15 +4,15 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import { IconButton, Input } from "@material-ui/core";
-import { useMedia } from "../../MediaContext";
+import { useSelector} from "../../redux/actions/userAction";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Link } from "react-router-dom";
 function Subscribepost() {
-  const { state } = useMedia();
+  const state = useSelector(state => state.currentUser);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://chit-chat-12.herokuapp.com/getsubpost", {
+    fetch("https://social-media-testing.herokuapp.com/getsubpost", {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -27,7 +27,7 @@ function Subscribepost() {
   }, []);
 
   const postLikes = (id) => {
-    fetch("https://chit-chat-12.herokuapp.com/like", {
+    fetch("https://social-media-testing.herokuapp.com/like", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function Subscribepost() {
   };
 
   const postUnlikes = (id) => {
-    fetch("https://chit-chat-12.herokuapp.com/unlike", {
+    fetch("https://social-media-testing.herokuapp.com/unlike", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +67,7 @@ function Subscribepost() {
     })
       .then((res) => res.json())
       .then((result) => {
-        
+        // console.log(result)
 
         const newData = data.map((item) => {
           if (item._id === result._id) {
@@ -83,7 +83,7 @@ function Subscribepost() {
   };
 
   const postComment = (text, id) => {
-    fetch("https://chit-chat-12.herokuapp.com/comment", {
+    fetch("https://social-media-testing.herokuapp.com/comment", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +112,7 @@ function Subscribepost() {
   };
 
   const deletePost = (postId) => {
-    fetch(`https://chit-chat-12.herokuapp.com/delete/${postId}`, {
+    fetch(`https://social-media-testing.herokuapp.com/delete/${postId}`, {
       method: "delete",
       headers: {
         "Content-Type": "application/json",
@@ -132,9 +132,10 @@ function Subscribepost() {
       .catch((err) => console.log(err));
   };
 
-  
+  // console.log(data)
   return (
     <div className="body">
+      <h1 style={{textAlign:"center"}}>Post of users you are following</h1>
       <div className="media_content">
         {/* Card */}
 
@@ -167,7 +168,7 @@ function Subscribepost() {
 
                     <DeleteIcon />
                   </div>
-                  <img src={elem.photo} alt="" />
+                  <img className="img-subscribe" src={elem.photo} alt="" />
                   <h3 style={{ paddingLeft: "0.5rem" }}>{elem.title}</h3>
 
                   {elem.likes.includes(state._id) ? (
@@ -193,7 +194,7 @@ function Subscribepost() {
                         <span
                           style={{ fontWeight: "400", paddingLeft: "0.5rem" }}
                         >
-                          {item.postedBy.name}-
+                          {item.postedBy?item.postedBy.name:"Anonymous"}-
                         </span>{" "}
                         {item.text}
                       </h5>

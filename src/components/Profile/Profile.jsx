@@ -1,25 +1,20 @@
 import React,{useState,useEffect} from 'react';
 import "./Profile.css";
-
 import { Input } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import {UpdatepicAction} from "../../action/userAction";
+import {updatepicAction} from "../../redux/actions/userAction";
+import {useSelector,useDispatch} from "react-redux";
 
 function Profile() {
 
 const[pics,setPics]=useState([]);
-
 const [image,setImage]=useState("");
 const [url,setUrl]=useState("");
-const dispatch = useDispatch();
-
-const User=useSelector((state)=>state.User)
-const {state}=User;
-
+const state = useSelector(state => state.currentUser);
+const dispatch=useDispatch();
 
     useEffect(()=>{
 
-        fetch("https://chit-chat-12.herokuapp.com/mypost",{
+        fetch("https://social-media-testing.herokuapp.com/mypost",{
             headers:{
                 "Content-Type": "application/json",
                 "Authorization": "Bearer "+ localStorage.getItem("jwt")
@@ -27,7 +22,7 @@ const {state}=User;
         })
         .then(res=> res.json())
         .then(data=>{
-            
+            // console.log(data.mypost)
             setPics(data.mypost)
 
         })
@@ -47,28 +42,29 @@ const {state}=User;
         })
         .then(res=> res.json())
         .then(data=> {
-          console.log(data)
+          
           
           setUrl(data.url)
-          console.log(data)
+          console.log(data.url)
+         const temp=data.url
+         const value=temp.replace("http","https");
          
-          
-          fetch("https://chit-chat-12.herokuapp.com/updatepic", {
+          console.log(value)
+          fetch("https://social-media-testing.herokuapp.com/updatepic", {
              method:"put",
              headers:{
                  "Content-Type":"application/json",
                  "Authorization":"Bearer "+ localStorage.getItem("jwt")
              },
              body:JSON.stringify({
-                pic:data.url
+                pic:value
              })
           })
           .then(res=>res.json())
           .then(result=>{
               console.log(result)
               localStorage.setItem("user",JSON.stringify({...state,pic:result.pic}))
-
-                 dispatch(UpdatepicAction(result.pic))
+                 dispatch(updatepicAction(result.pic))
           })
           .catch(err=>console.log(err))
     
@@ -85,14 +81,14 @@ const {state}=User;
         
        }
 
-       
+    //    console.log(state);
 
     return (
         <div style={{paddingTop:"7rem"}}>
             
-            <div style={{display:"flex",justifyContent:"space-evenly"}}>
+            <div className="upper-section">
            <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-          <img style={{borderRadius:"50%",width:"20rem",height:"15rem"}} src={state?state.pic:"Loading"} alt="" srcset="" />
+          <img className="upper-img" src={state?state.pic:"Loading"} alt="" srcset="" />
           <Input type="file" onChange={(e) => updatePhoto(e.target.files[0])} />
           
 
@@ -100,11 +96,11 @@ const {state}=User;
 
 
 
-           <div style={{display:"flex",flexDirection:"column",gap:"2rem"}}>
+           <div style={{display:"flex",flexDirection:"column",gap:"2rem",paddingLeft:"1rem"}}>
            <h2>{state?state.name:"Anonymous"}</h2>
            <h2>{state?state.email:"Anonymous"}</h2>
 
-           <div style={{display:"flex",gap:"1rem"}}>
+           <div style={{display:"flex",gap:"1rem",flexWrap:"wrap",paddingLeft:"1rem"}}>
               <h3>{pics.length} posts</h3>
               <h3>{state?state.followers.length:"0"} followers</h3>
               <h3>{state?state.following.length:"0"} following</h3> 
@@ -126,7 +122,7 @@ const {state}=User;
                   pics && pics.map((elem)=>{
                     return(
                         <>
-                        <img className="img" src={elem.photo} alt="Gallery pics" />
+                        <img className="img-lower" src={elem.photo} alt="Gallery pics" />
                         </>
                     )
                   })

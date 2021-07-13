@@ -6,6 +6,8 @@ import "./CreatePost.css";
 import { useState, useEffect } from "react";
 import M from "materialize-css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreatePost() {
   const [title, setTitle] = useState("");
@@ -40,7 +42,7 @@ function CreatePost() {
   };
 
   const postbody = () => {
-    fetch("http://localhost:5000/createpost", {
+    fetch("https://social-media-testing.herokuapp.com/createpost", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -56,9 +58,9 @@ function CreatePost() {
       .then((data) => {
         console.log(data);
         if (data.error) {
-          M.toast({ html: data.error, classes: "#c62828 red darken-3" });
+          toast.error(data.error);
         } else {
-          M.toast({ html: "Created Post" });
+          toast.success("Created post");
           navigate("/home");
         }
       })
@@ -74,7 +76,7 @@ function CreatePost() {
   return (
     <div>
       <div style={{ paddingTop: "9rem" }}>
-        <div className="media_card">
+        <div className="media_card-createpost">
           <h1 className="brand-logo" style={{ margin: "0 auto" }}>
             Chit-Chat
           </h1>
@@ -106,6 +108,8 @@ function CreatePost() {
           </div>
         </div>
       </div>
+      <ToastContainer />
+      <ToastContainer />
     </div>
   );
 }

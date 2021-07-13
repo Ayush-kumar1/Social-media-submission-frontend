@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "./Userprofile.css";
-
 import { useParams } from "react-router-dom";
 import { Button } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { UpdateAction } from "../../action/userAction";
+import { useSelector, useDispatch } from "react-redux";
+import { updateAction } from "../../redux/actions/userAction";
+
 function Userprofile() {
   const [Profile, setProfile] = useState(null);
 
-  const User = useSelector((state) => state.User);
-  const { state } = User;
+  const state = useSelector((state) => state.currentUser);
+  const dispatch = useDispatch();
+
   const { userid } = useParams();
   const [showfollow, setShowFollow] = useState(
     state ? !state.following.includes(userid) : true
   );
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(`https://chit-chat-12.herokuapp.com/user/${userid}`, {
+    fetch(`https://social-media-testing.herokuapp.com/user/${userid}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -25,6 +25,8 @@ function Userprofile() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
+
         setProfile(data);
       })
       .catch((err) => console.log(err));
@@ -33,7 +35,7 @@ function Userprofile() {
   console.log(Profile);
 
   const follow = () => {
-    fetch("https://chit-chat-12.herokuapp.com/follow", {
+    fetch("https://social-media-testing.herokuapp.com/follow", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +47,7 @@ function Userprofile() {
     })
       .then((res) => res.json())
       .then((result) => {
-        dispatch(UpdateAction(result));
+        dispatch(updateAction(result));
         localStorage.setItem("user", JSON.stringify(result));
         console.log(result);
         setProfile((prevState) => {
@@ -65,7 +67,7 @@ function Userprofile() {
   };
 
   const unfollow = () => {
-    fetch("https://chit-chat-12.herokuapp.com/unfollow", {
+    fetch("https://social-media-testing.herokuapp.com/unfollow", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -77,12 +79,9 @@ function Userprofile() {
     })
       .then((res) => res.json())
       .then((result) => {
-        dispatch({
-          type: "UPDATE",
-          payload: { following: result.following, followers: result.followers },
-        });
+        dispatch(updateAction(result));
         localStorage.setItem("user", JSON.stringify(result));
-
+        console.log(result);
         setProfile((prevState) => {
           const newFollower = prevState.user.followers.filter(
             (item) => item !== result._id
@@ -102,6 +101,8 @@ function Userprofile() {
         console.log(err);
       });
   };
+
+  console.log(Profile);
 
   return (
     <>

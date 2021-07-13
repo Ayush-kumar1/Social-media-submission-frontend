@@ -1,7 +1,7 @@
 .media-card {
     display: flex;
     flex-direction: column;
-    width: 501px;
+    width: 30rem;
     height: fit-content;
     border: 1px solid black;
     position: relative;
@@ -10,8 +10,8 @@
     padding-bottom: 1rem;
 }
 
-img {
-    width: 500px;
+.img-subscribe {
+    width: 30rem;
     height: 400px;
 }
 
@@ -26,4 +26,13 @@ img {
 .media_content {
     margin-right: auto;
     margin-left: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .media-card {
+        width: 20rem;
+    }
+    .img-subscribe {
+        width: 20rem;
+    }
 }

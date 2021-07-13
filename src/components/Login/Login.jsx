@@ -4,16 +4,19 @@ import { Input } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { Link, useNavigate } from "react-router-dom";
 import M from "materialize-css";
-import { useMedia } from "../../MediaContext";
-import { UserAction } from "../../action/userAction";
-import { useDispatch, useSelector } from "react-redux";
+import {useMedia} from "../../MediaContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {useDispatch,useSelector} from "react-redux";
+import { userAction } from "../../redux/actions/userAction";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const state = useSelector(state => state.currentUser);
+  const dispatch=useDispatch();
 
   let navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const postData = () => {
     if (
@@ -21,9 +24,9 @@ function Login() {
         email
       )
     ) {
-      return M.toast({ html: "Invalid email" });
+      return toast.error("Invalid Email");
     } else {
-      fetch("https://chit-chat-12.herokuapp.com/signin", {
+      fetch("https://social-media-testing.herokuapp.com/signin", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -35,15 +38,15 @@ function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.message !== "Login succesful") {
-            M.toast({ html: data.message, classes: "#c62828 red darken-3" });
+          console.log(data);
+          if (data.message!=="Login succesful") {
+            toast.error(data.message);
           } else {
-            localStorage.setItem("jwt", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-
-            dispatch(UserAction(data.user));
-
-            M.toast({ html: "Login sucessful" });
+            localStorage.setItem("jwt",data.token);
+            localStorage.setItem("user",JSON.stringify(data.user))
+            dispatch({type:"USER", payload:data.user})
+            dispatch(userAction(data.user));
+            toast.success("Login successful");
             navigate("/home");
           }
         })
@@ -55,9 +58,9 @@ function Login() {
 
   return (
     <div style={{ paddingTop: "9rem" }}>
-      <div className="media_card">
+      <div className="media_card_login">
         <h1 className="brand-logo" style={{ margin: "0 auto" }}>
-          Chit-Chat
+        Chit-Chat
         </h1>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -92,6 +95,9 @@ function Login() {
           </div>
         </div>
       </div>
+      <ToastContainer/>
+      <ToastContainer/>
+      <ToastContainer/>
     </div>
   );
 }

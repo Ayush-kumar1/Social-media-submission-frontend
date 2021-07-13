@@ -4,16 +4,19 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import { IconButton, Input } from "@material-ui/core";
-
+import { useSelector } from "react-redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Link } from "react-router-dom";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 function Home() {
+  const state = useSelector(state => state.currentUser);
   const [data, setData] = useState([]);
-  const [user, setUser] = useState();
+  const[user,setUser]=useState();
+
+  console.log(state)
 
   useEffect(() => {
-    fetch("https://chit-chat-12.herokuapp.com/allpost", {
+    fetch("https://social-media-testing.herokuapp.com/allpost", {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -28,7 +31,7 @@ function Home() {
   }, []);
 
   const postLikes = (id) => {
-    fetch("https://chit-chat-12.herokuapp.com/like", {
+    fetch("https://social-media-testing.herokuapp.com/like", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +59,7 @@ function Home() {
   };
 
   const postUnlikes = (id) => {
-    fetch("https://chit-chat-12.herokuapp.com/unlike", {
+    fetch("https://social-media-testing.herokuapp.com/unlike", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -68,6 +71,8 @@ function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
+        // console.log(result)
+
         const newData = data.map((item) => {
           if (item._id === result._id) {
             return result;
@@ -82,7 +87,7 @@ function Home() {
   };
 
   const postComment = (text, id) => {
-    fetch("https://chit-chat-12.herokuapp.com/comment", {
+    fetch("https://social-media-testing.herokuapp.com/comment", {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -95,6 +100,8 @@ function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
+        console.log(result);
+
         const newData = data.map((item) => {
           if (item._id === result._id) {
             return result;
@@ -109,34 +116,36 @@ function Home() {
   };
 
   const deletePost = (postId) => {
-    fetch(`https://chit-chat-12.herokuapp.com/delete/${postId}`, {
+    fetch(`https://social-media-testing.herokuapp.com/delete/${postId}`, {
       method: "delete",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
+        "Authorization": "Bearer " + localStorage.getItem("jwt")
       },
     })
       .then((res) => res.json())
       .then((result) => {
+        console.log(result);
+        console.log(data);
         const newData = data.filter((elem) => {
           return elem._id !== result.result._id;
         });
-
+         
+        console.log(newData);
         setData(newData);
-      })
+      })   
       .catch((err) => console.log(err));
   };
 
   // console.log(data)
 
-  const temp = JSON.parse(localStorage.getItem("user"));
-
+  const temp=JSON.parse(localStorage.getItem("user"))
+  console.log(temp._id)
   return (
     <div className="body">
+
       <Link to="/createpost">
-        <h2 className="create-post">
-          <AddCircleIcon fontSize="large" />{" "}
-        </h2>
+      <h2 className="create-post"><AddCircleIcon fontSize="large"/> </h2>
       </Link>
       <div className="media_content">
         {/* Card */}
@@ -144,7 +153,7 @@ function Home() {
         {data &&
           data.map((elem) => {
             return (
-              <div className="media-card">
+              <div className="media-card-home">
                 <div>
                   <div
                     style={{
@@ -168,16 +177,11 @@ function Home() {
                       </Link>{" "}
                     </h5>
                     <IconButton>
-                      <DeleteIcon
-                        style={{
-                          dispaly:
-                            temp._id !== elem.postedBy._id ? "none" : "block",
-                        }}
-                        onClick={() => deletePost(elem._id)}
-                      />
+                    <DeleteIcon style={{dispaly:temp._id!==elem.postedBy._id?"none":"block"}} onClick={()=>deletePost(elem._id)}  />
                     </IconButton>
+
                   </div>
-                  <img src={elem.photo} alt="" />
+                  <img className="img-home" src={elem.photo} alt="" />
                   <h3 style={{ paddingLeft: "0.5rem" }}>{elem.title}</h3>
 
                   {elem.likes.includes(state._id) ? (
@@ -203,7 +207,8 @@ function Home() {
                         <span
                           style={{ fontWeight: "400", paddingLeft: "0.5rem" }}
                         >
-                          {item.postedBy.name}-
+                          
+                          {item.postedBy?item.postedBy.name:"Anonymous"}-
                         </span>{" "}
                         {item.text}
                       </h5>
@@ -215,7 +220,7 @@ function Home() {
                     onSubmit={(e) => {
                       e.preventDefault();
                       postComment(e.target[0].value, elem._id);
-                      e.target[0].value = "";
+                      e.target[0].value=""
                     }}
                   >
                     <Input

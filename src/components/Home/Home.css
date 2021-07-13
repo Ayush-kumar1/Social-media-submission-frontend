@@ -1,7 +1,8 @@
-.media-card {
+.media-card-home {
     display: flex;
     flex-direction: column;
-    width: 501px;
+    /* width: 501px; */
+    width: 30rem;
     height: fit-content;
     border: 1px solid black;
     position: relative;
@@ -10,8 +11,8 @@
     padding-bottom: 1rem;
 }
 
-img {
-    width: 500px;
+.img-home {
+    width: 30rem;
     height: 400px;
 }
 
@@ -33,4 +34,16 @@ img {
 .media_content {
     margin-right: auto;
     margin-left: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .media-card-home {
+        width: 20rem;
+    }
+    .img-home {
+        width: 20rem;
+    }
+    .create-post {
+        right: 0.5rem;
+    }
 }

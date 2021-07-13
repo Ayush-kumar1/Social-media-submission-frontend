@@ -3,24 +3,27 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { ClearAction } from "../../action/userAction";
+import { useSelector,useDispatch } from "react-redux";
+import { clearAction } from "../../redux/actions/userAction";
+import { IconButton } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
+
 function Header() {
   let navigate = useNavigate();
-
+  const state = useSelector((state) => state.currentUser);
   const dispatch = useDispatch();
-
-  const User = useSelector((state) => state.User);
-  const { state } = User;
 
   function nav() {
     if (state) {
       return [
-        <Link to="profile">
+        <Link to="/profile">
           <h3>Profile</h3>
         </Link>,
         <Link to="subscribepost">
-          <h6>Subscriber's post</h6>
+          <h6 className="sub-post">
+            <SubscriptionsIcon fontSize="large" />
+          </h6>
         </Link>,
 
         <Link to="/login">
@@ -28,10 +31,14 @@ function Header() {
             onClick={() => {
               localStorage.clear();
 
-              dispatch(ClearAction());
+              dispatch(clearAction());
             }}
           >
-            <Button variant="contained" color="secondary">
+            <Button
+              variant="contained"
+              color="secondary"
+              className="btn-header"
+            >
               Logout
             </Button>
           </h3>
@@ -39,10 +46,10 @@ function Header() {
       ];
     } else {
       return [
-        <Link to="login">
+        <Link to="/login">
           <h3>Login</h3>
         </Link>,
-        <Link to="signup">
+        <Link to="/signup">
           <h3>Signup</h3>
         </Link>,
       ];
