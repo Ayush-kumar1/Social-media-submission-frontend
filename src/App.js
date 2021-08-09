@@ -8,19 +8,20 @@ import Home from "./components/Home/Home";
 import CreatePost from "./components/CreatePost/CreatePost";
 import {useNavigate} from "react-router-dom";
 import { useEffect } from 'react';
-import {useMedia} from "./MediaContext";
 import Userprofile from './components/Userprofile/Userprofile';
 import Subscribepost from "./components/Subscribepost/Subscribepost";
+import { useSelector, useDispatch } from "react-redux";
 
 function App() {
 
   let navigate=useNavigate();
-  const {state,dispatch}=useMedia();
+  const state = useSelector((state) => state.currentUser);
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     
     let user=JSON.parse(localStorage.getItem('user'));
-    
+     
     if(user){
       // navigate("/")
       dispatch({type:"USER",payload:user})

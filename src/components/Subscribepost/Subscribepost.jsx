@@ -4,7 +4,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import { IconButton, Input } from "@material-ui/core";
-import { useSelector} from "../../redux/actions/userAction";
+import { useSelector} from "react-redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Link } from "react-router-dom";
 function Subscribepost() {

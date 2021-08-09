@@ -22,5 +22,8 @@ export const userReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 pic: payload
             }
+
+        default:
+            return state;
     }
 }

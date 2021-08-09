@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {BrowserRouter as Router} from "react-router-dom";
-import {MediaProvider} from "./MediaContext"
+import {Provider} from "react-redux";
+import store from "./redux/store";
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <MediaProvider>
-    <App />
-    </MediaProvider>
+    <Provider store={store}>
+        <App />
+      </Provider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
